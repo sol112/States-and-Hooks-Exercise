@@ -1,0 +1,126 @@
+To pass a variable between JavaScript files using hooks, particularly in a React environment, one can employ the Context API or a custom hook combined with state management.
+Using Context API
+The Context API provides a way to share values between components without explicitly passing props through every level of the component tree. Create a Context.
+JavaScript
+
+    // DataContext.js
+    import React, { createContext, useState } from 'react';
+
+    export const DataContext = createContext();
+
+    export const DataProvider = ({ children }) => {
+      const [myVariable, setMyVariable] = useState(null);
+
+      return (
+        <DataContext.Provider value={{ myVariable, setMyVariable }}>
+          {children}
+        </DataContext.Provider>
+      );
+    };
+Wrap the App with the Provider.
+JavaScript
+
+    // App.js or index.js
+    import React from 'react';
+    import { DataProvider } from './DataContext';
+    import ComponentA from './ComponentA';
+    import ComponentB from './ComponentB';
+
+    function App() {
+      return (
+        <DataProvider>
+          <ComponentA />
+          <ComponentB />
+        </DataProvider>
+      );
+    }
+
+    export default App;
+Consume the Context in Components.
+JavaScript
+
+    // ComponentA.js
+    import React, { useContext } from 'react';
+    import { DataContext } from './DataContext';
+
+    function ComponentA() {
+      const { setMyVariable } = useContext(DataContext);
+
+      const handleClick = () => {
+        setMyVariable('Hello from Component A');
+      };
+
+      return (
+        <button onClick={handleClick}>Set Variable</button>
+      );
+    }
+    export default ComponentA;
+JavaScript
+
+    // ComponentB.js
+    import React, { useContext } from 'react';
+    import { DataContext }  from './DataContext';
+
+    function ComponentB() {
+        const { myVariable } = useContext(DataContext);
+
+        return (
+            <div>
+                {myVariable && <p>Value: {myVariable}</p>}
+            </div>
+        );
+    }
+
+    export default ComponentB;
+Using a Custom Hook
+One can create a custom hook to manage the state and share it between components. Create a Custom Hook.
+JavaScript
+
+    // useData.js
+    import { useState } from 'react';
+
+    const useData = () => {
+      const [myVariable, setMyVariable] = useState(null);
+
+      return { myVariable, setMyVariable };
+    };
+
+    export default useData;
+Use the Custom Hook in Components.
+JavaScript
+
+    // ComponentA.js
+    import React from 'react';
+    import useData from './useData';
+
+    function ComponentA() {
+      const { setMyVariable } = useData();
+
+      const handleClick = () => {
+        setMyVariable('Hello from Component A');
+      };
+
+      return (
+        <button onClick={handleClick}>Set Variable</button>
+      );
+    }
+
+    export default ComponentA;
+JavaScript
+
+    // ComponentB.js
+    import React from 'react';
+    import useData from './useData';
+
+    function ComponentB() {
+      const { myVariable } = useData();
+
+      return (
+        <div>
+          {myVariable && <p>Value: {myVariable}</p>}
+        </div>
+      );
+    }
+
+    export default ComponentB;
+Both methods facilitate sharing variables between JavaScript files using hooks. The choice between them depends on the complexity and scope of the data being shared. The Context API is suitable for application-wide state management, while a custom hook can be used for more localized state sharing
