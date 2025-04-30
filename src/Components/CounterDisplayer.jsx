@@ -16,8 +16,8 @@ function CounterDisplayer() {
 
   return (
     <div>
-        <h1>Number of Counts:{myVariable} </h1>
-        <button onClick={updateVariable}>Click me! I am apssing a state value to a function: 'allClicksCounter' in another Component</button>
+        <h2>Number of Counts:{myVariable} </h2>
+        <button onClick={updateVariable}>Click me!! I am apssing a state value to a function: 'allClicksCounter' in another Component</button>
     </div>
   )
 }
